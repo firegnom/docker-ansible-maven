@@ -42,7 +42,21 @@ RUN echo "===> Installing python, sudo, and supporting tools..."  && \
     echo "===> Adding hosts for convenience..."        && \
     mkdir -p /etc/ansible                              && \
     echo 'localhost' > /etc/ansible/hosts
+RUN echo "===> Installing docker"        && \
+    apt-get -y update && \
+    apt-get -y  install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    software-properties-common && \
 
+    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    apt-key fingerprint 0EBFCD88 && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable" && \
+    apt-get -y update && \
+    DEBIAN_FRONTEND=noninteractive         \
+    apt-get install -y docker-ce docker-compose
 
 # default command: display Ansible version
 CMD [ "ansible-playbook", "--version" ]
